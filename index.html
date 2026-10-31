@@ -181,7 +181,7 @@
 
       <p class="catatan">Data ini dihapus otomatis setelah kamu klik Konfirmasi via WhatsApp atau meninggalkan halaman ini. Salin nominal sebelum keluar.</p>
 
-      <a class="btn btn-wa btn-blok" id="btnWa" target="_blank" rel="noopener">Konfirmasi via WhatsApp</a>
+      <a class="btn btn-wa btn-blok" id="btnWa" target="_blank" rel="noopener">Konfirmasi admin pembuat addon</a>
       <button class="tautan" id="btnUbah" type="button">Ubah data pemesan</button>
     </section>
 
@@ -203,7 +203,8 @@
 /* ===== PENGATURAN TOKO: hanya bagian CONFIG ini yang perlu kamu ubah ===== */
 const CONFIG = {
   storeName: 'Zibon craft74',
-  adminWA: 'https://www.instagram.com/ziboncraft?exln=MzgwMnN5djZuaGtx',   // nomor WhatsApp admin, boleh 08... atau 62... (spasi dan tanda + tidak masalah)
+  adminWA: '',   // nomor WhatsApp admin, boleh 08... atau 62... (spasi dan tanda + tidak masalah)
+  websiteUrl: 'https://andraeka070707-hub.github.io/Zibon_craft74_chat/', // tujuan tombol Konfirmasi admin pembuat addon
   paymentHours: 24,                // batas bayar yang tampil di tagihan, dalam jam
   product: {
     name: 'Addon KUJR',
@@ -247,6 +248,17 @@ const CONFIG = {
   $('footNama').textContent = `© ${new Date().getFullYear()} ${CONFIG.storeName}`;
   $('btnAdmin').href = waLink(`Halo Admin ${CONFIG.storeName}, saya ingin bertanya tentang ${P.name}.`);
 
+  // Tautan Konfirmasi: membuka halaman chat dengan teks tagihan sudah terisi (?pesan=...)
+  function chatLink(teks) {
+    try {
+      const u = new URL(CONFIG.websiteUrl);
+      u.searchParams.set('pesan', teks);
+      return u.toString();
+    } catch (err) {
+      return CONFIG.websiteUrl;
+    }
+  }
+
   // Pesan WhatsApp: data pesanan, lalu permintaan info pembayaran ke admin
   function pesanWa(t) {
     return [
@@ -277,7 +289,7 @@ const CONFIG = {
     $('rEmail').textContent = t.email;
     $('rWa').textContent = '0' + t.wa.slice(2);
     $('rBatas').textContent = fmtTgl(t.batas);
-    $('btnWa').href = waLink(pesanWa(t));
+    $('btnWa').href = chatLink(pesanWa(t));
     $('tagihan').hidden = false;
     if (gulir) $('tagihan').scrollIntoView({ behavior: smooth, block: 'start' });
   }
